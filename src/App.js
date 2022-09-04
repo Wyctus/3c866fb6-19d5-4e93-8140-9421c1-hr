@@ -1,8 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import TextInput from "./components/TextInput";
 
 class App extends Component {
   render() {
-    return <span>Write your answer here</span>;
+    return (
+      <div style={{ padding: 80, width: 350 }}>
+        <TextInput></TextInput>
+      </div>
+    );
   }
 }
 
