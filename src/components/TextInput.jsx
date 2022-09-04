@@ -30,9 +30,14 @@ class TextInput extends Component {
             this.setState({error: ""});
 
             // Send the request to validate
-            const taken = await this.validateUsername(value);
-            if(taken){
-                this.setState({error: "The username is taken!"});
+            try{
+                const taken = await this.validateUsername(value);
+                if(taken){
+                    this.setState({error: "The username is taken!"});
+                }
+            }catch(err){
+                console.log("error");
+                this.setState({error: err.message});
             }
         }
     } 
@@ -41,11 +46,17 @@ class TextInput extends Component {
         const url = `https://hxj1tck8l1.execute-api.us-east-1.amazonaws.com/default/users/taken?username=${username}`;
         
         const resp = await fetch(url);
-        const data = await resp.json();
+        
+        if(resp.status === 500){
+            throw new Error("Unexpected server error!");
+        }
 
-        console.log(data.taken);
-
-        return data.taken;
+        try{
+            const data = await resp.json();
+            return data.taken;
+        }catch(err) {
+            throw new Error("Malformed JSON response!");
+        }
     }
 }
 
