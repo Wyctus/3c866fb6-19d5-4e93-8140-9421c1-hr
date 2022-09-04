@@ -20,17 +20,33 @@ class TextInput extends Component {
         </div>
     }
 
-    onChange(value) {
+    async onChange(value) {
         if(0 < value.length && value.length < 4) {
-            this.setState({error: "Username must be at least 4 characters long."});
+            this.setState({error: "Username must be at least 4 characters long!"});
             
 
         }else {
+            // Long enough so remove the error
             this.setState({error: ""});
+
+            // Send the request to validate
+            const taken = await this.validateUsername(value);
+            if(taken){
+                this.setState({error: "The username is taken!"});
+            }
         }
     } 
 
-    
+    async validateUsername(username) {
+        const url = `https://hxj1tck8l1.execute-api.us-east-1.amazonaws.com/default/users/taken?username=${username}`;
+        
+        const resp = await fetch(url);
+        const data = await resp.json();
+
+        console.log(data.taken);
+
+        return data.taken;
+    }
 }
 
 const style = {
