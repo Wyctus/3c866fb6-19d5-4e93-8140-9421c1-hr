@@ -5,7 +5,7 @@ class App extends Component {
   render() {
     return (
       <div style={{ padding: 80, width: 350 }}>
-        <TextInput></TextInput>
+        <TextInput onChange={(v) => console.log(v)}></TextInput>
       </div>
     );
   }

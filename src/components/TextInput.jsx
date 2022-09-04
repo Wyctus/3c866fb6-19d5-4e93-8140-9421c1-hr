@@ -21,10 +21,11 @@ class TextInput extends Component {
     }
 
     async onChange(value) {
+        let isValid = true;
+
         if(0 < value.length && value.length < 4) {
             this.setState({error: "Username must be at least 4 characters long!"});
-            
-
+            isValid = false;
         }else {
             // Long enough so remove the error
             this.setState({error: ""});
@@ -34,12 +35,15 @@ class TextInput extends Component {
                 const taken = await this.validateUsername(value);
                 if(taken){
                     this.setState({error: "The username is taken!"});
+                    isValid = false;
                 }
             }catch(err){
                 console.log("error");
                 this.setState({error: err.message});
             }
         }
+
+        this.props.onChange({value: value, valid: isValid});
     } 
 
     async validateUsername(username) {
@@ -58,6 +62,7 @@ class TextInput extends Component {
             throw new Error("Malformed JSON response!");
         }
     }
+
 }
 
 const style = {
